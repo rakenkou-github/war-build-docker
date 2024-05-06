@@ -17,18 +17,25 @@ pipeline {
 
     stage('Package Maven') {
       steps{
-        sh 'echo "Package Maven"'
+        sh 'mvn package'
       }
     }
-    /*
+    
     stage('Building image') {
       steps{
         script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+            def img = stage('Build') {
+                docker,build("$")
+            }
+            img.withRun("--name run -$BUILD_ID -p 8081:8081") {
+                c -> 
+                sh 'docker ps'
+            }
         }
       }
     }
     
+    /*
     stage('Deploy Image') {
       steps{
         script {
