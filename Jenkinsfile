@@ -24,8 +24,11 @@ pipeline {
     stage('Building image') {
       steps{
         script {
+            def registryProjet='https://index.docker.io/v1/akenkour/gsd'
+	        def IMAGE="${registryProjet}:version-${env.BUILD_ID}"
+	        echo "IMAGE = $IMAGE"
             def img = stage('Build') {
-                docker,build("$")
+                docker.build("$IMAGE", '.')
             }
             img.withRun("--name run -$BUILD_ID -p 8081:8081") {
                 c -> 
